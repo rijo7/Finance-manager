@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Transaction</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Add New Transaction</h1>
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Category Field -->
+        <label for="{{ form.category.id_for_label }}">Category:</label>
+        {{ form.category }}
+        {% if form.category.errors %}
+            <div class="error-message">{{ form.category.errors }}</div>
+        {% endif %}
+
+        <!-- Subcategory Field -->
+        <div id="subcategory-container">
+            <label for="{{ form.subcategory.id_for_label }}">Subcategory:</label>
+            {{ form.subcategory }}
+            {% if form.subcategory.errors %}
+                <div class="error-message">{{ form.subcategory.errors }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Amount Field -->
+        <label for="{{ form.amount.id_for_label }}">Amount:</label>
+        {{ form.amount }}
+        {% if form.amount.errors %}
+            <div class="error-message">{{ form.amount.errors }}</div>
+        {% endif %}
+
+        <!-- Date Field -->
+        <label for="{{ form.date.id_for_label }}">Date:</label>
+        {{ form.date }}
+        {% if form.date.errors %}
+            <div class="error-message">{{ form.date.errors }}</div>
+        {% endif %}
+
+        <!-- Description Field -->
+        <label for="{{ form.description.id_for_label }}">Description:</label>
+        {{ form.description }}
+        {% if form.description.errors %}
+            <div class="error-message">{{ form.description.errors }}</div>
+        {% endif %}
+
+        <button type="submit">Submit</button>
+    </form>
+    <a href="{% url 'transaction_list' %}">Back to Transaction List</a>
+
+    <!-- Script to dynamically load subcategories based on the selected category -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryField = document.getElementById('id_category');
+            const subcategoryField = document.getElementById('id_subcategory');
+
+            function updateSubcategories() {
+                const categoryId = categoryField.value;
+
+                // Send AJAX request to fetch subcategories
+                if (categoryId) {
+                    $.ajax({
+                        url: "{% url 'ajax_load_subcategories' %}",  // URL endpoint for loading subcategories
+                        data: {
+                            'category': categoryId  // Send the selected category ID
+                        },
+                        success: function(data) {
+                            // Clear the current subcategory options
+                            subcategoryField.innerHTML = '<option value="">Select Subcategory</option>';
+
+                            // Populate the new options from the response data
+                            data.subcategories.forEach(function(subcategory) {
+                                const option = document.createElement('option');
+                                option.value = subcategory.id;
+                                option.textContent = subcategory.name;
+                                subcategoryField.appendChild(option);
+                            });
+                        }
+                    });
+                } else {
+                    // If no category is selected, clear subcategories
+                    subcategoryField.innerHTML = '<option value="">Select Subcategory</option>';
+                }
+            }
+
+            // Trigger update when the category changes
+            categoryField.addEventListener('change', updateSubcategories);
+        });
+    </script>
+</body>
+</html>

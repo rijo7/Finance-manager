@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .dashboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .summary div {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .summary div h2 {
+            margin: 0;
+            color: #555;
+        }
+        .summary div p {
+            font-size: 24px;
+            margin: 10px 0;
+            color: #333;
+        }
+        .links {
+            text-align: center;
+        }
+        .links a {
+            text-decoration: none;
+            color: #007bff;
+            margin: 0 10px;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .chart-container {
+            margin-top: 20px;
+        }
+        canvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Financial Dashboard</h1>
+        <div class="summary">
+            <div>
+                <h2>Total Income</h2>
+                <p>${{ income }}</p>
+            </div>
+            <div>
+                <h2>Total Expense</h2>
+                <p>${{ expense }}</p>
+            </div>
+            <div>
+                <h2>Balance</h2>
+                <p>${{ balance }}</p>
+            </div>
+        </div>
+        <div class="chart-container">
+            <h2>Income vs Expenses</h2>
+            <canvas id="incomeExpenseChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h2>Monthly Income</h2>
+            <canvas id="monthlyIncomeChart"></canvas>
+        </div>
+        <div class="links">
+            <a href="{% url 'add_transaction' %}">Add New Transaction</a> |
+            <a href="{% url 'transaction_list' %}">View Transactions</a> |
+            <a href="{% url 'export_transactions_pdf' %}">Export Transactions to PDF</a>
+
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Income vs Expenses Chart
+        const ctxIncomeExpense = document.getElementById('incomeExpenseChart').getContext('2d');
+        const chartData = {{ chart_data|safe }};
+        new Chart(ctxIncomeExpense, {
+            type: 'line',
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: 'Income',
+                        data: chartData.income_data,
+                        borderColor: 'green',
+                        fill: false
+                    },
+                    {
+                        label: 'Expenses',
+                        data: chartData.expense_data,
+                        borderColor: 'red',
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Monthly Income Chart
+        const ctxMonthlyIncome = document.getElementById('monthlyIncomeChart').getContext('2d');
+        const incomeChartData = JSON.parse('{{ monthly_income_chart_data|escapejs }}');
+        new Chart(ctxMonthlyIncome, {
+            type: 'line',
+            data: {
+                labels: incomeChartData.labels,
+                datasets: [{
+                    label: 'Monthly Income',
+                    data: incomeChartData.income_data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+    </script>
+</body>
+</html>

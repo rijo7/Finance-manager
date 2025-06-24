@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transaction List</title>
+</head>
+<body>
+    <h1>Transaction List</h1>
+    <a href="{% url 'add_transaction' %}">Add New Transaction</a>
+    <ul>
+        {% for transaction in transactions %}
+            <li>
+                {{ transaction.date }} - {{ transaction.subcategory }} - {{ transaction.amount }}
+                <a href="{% url 'edit_transaction' transaction.id %}">Edit</a>
+                <a href="{% url 'delete_transaction' transaction.id %}">Delete</a>
+            </li>
+        {% empty %}
+            <li>No transactions available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

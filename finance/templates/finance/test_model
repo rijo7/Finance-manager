@@ -1,0 +1,30 @@
+from finance.models import Category, Transaction, Budget
+
+# Create a category
+category = Category.objects.create(name='Food')
+
+# Create a transaction
+from django.contrib.auth.models import User
+user = User.objects.first()  # Use an existing user
+transaction = Transaction.objects.create(
+    user=user,
+    type='income',
+    category=category,
+    amount=100.00,
+    date='2024-08-21',
+    description='Test transaction'
+)
+
+# Create a budget
+budget = Budget.objects.create(
+    user=user,
+    category=category,
+    amount=500.00,
+    start_date='2024-01-01',
+    end_date='2024-12-31'
+)
+
+# Verify objects
+print(Category.objects.all())
+print(Transaction.objects.all())
+print(Budget.objects.all())
