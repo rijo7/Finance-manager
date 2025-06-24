@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-default-dev-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = os.environ.get('https://finance-manager-8hav.onrender.com', '*').split(',')
 
 
 # Application definition
