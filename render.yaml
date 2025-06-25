@@ -6,6 +6,8 @@ services:
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
     startCommand: |
+      mkdir -p /opt/render/project/src/db
+      export DATABASE_URL=sqlite:////opt/render/project/src/db/db.sqlite3
       python manage.py migrate
       gunicorn finance_manager.wsgi
     envVars:
