@@ -5,9 +5,10 @@ services:
     buildCommand: |
       pip install -r requirements.txt
     startCommand: |
-      DATABASE_URL=sqlite:////opt/render/project/src/db/db.sqlite3 \
-      python manage.py migrate && \
-      python manage.py collectstatic --noinput && \
+      mkdir -p /opt/render/project/src/db
+      export DATABASE_URL=sqlite:////opt/render/project/src/db/db.sqlite3
+      python manage.py migrate
+      python manage.py collectstatic --noinput
       gunicorn finance_manager.wsgi
     envVars:
       - key: DJANGO_SETTINGS_MODULE

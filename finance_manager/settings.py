@@ -93,7 +93,9 @@ WSGI_APPLICATION = 'finance_manager.wsgi.application'
 
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite3')}")
 DATABASES = {
-    'default': dj_database_url.config(default=DATABASE_URL)
+    'default': dj_database_url.config(
+        default='sqlite:////opt/render/project/src/db/db.sqlite3'
+    )
 }
 
 # Password validation
