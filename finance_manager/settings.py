@@ -32,7 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
-SECURE_SSL_REDIRECT = os.getenv('RENDER', False) == 'true'
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://web-production-b68bc.up.railway.app').split(',')
 # Application definition
 
 INSTALLED_APPS = [
@@ -80,7 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'finance_manager.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -90,19 +89,11 @@ WSGI_APPLICATION = 'finance_manager.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': '/opt/render/project/src/db/db.sqlite3',
-#     }
-# }
 
 
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite3')}")
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:////opt/render/project/src/db/db.sqlite3'
-    )
+    'default': dj_database_url.config(default=DATABASE_URL)
 }
 
 # Password validation
@@ -150,7 +141,3 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Database
-DATABASES = {
-    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
-}
