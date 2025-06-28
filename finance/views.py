@@ -14,6 +14,7 @@ from .forms import TransactionForm
 from django.db.models import Sum
 from django.contrib import messages
 from .forms import CustomUserCreationForm
+from django.views.decorators.csrf import csrf_exempt
 
 
 def home(request):
@@ -168,8 +169,14 @@ def export_transactions_pdf(request):
 
     return response
 
+@csrf_exempt
 def seed_categories(request):
-    if not request.user.is_staff:
+    if request.method != "GET":
+        return HttpResponse("Method Not Allowed", status=405)
+
+    # Optional: add a secret check
+    secret = request.GET.get('secret')
+    if secret != 'YOUR_SECRET_KEY':
         return HttpResponse("Forbidden", status=403)
 
     # Clear existing data
