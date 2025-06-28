@@ -17,6 +17,7 @@ urlpatterns = [
     path('delete/<int:id>/', views.delete_transaction, name='delete_transaction'),
     path('ajax/load-subcategories/', views.ajax_load_subcategories, name='ajax_load_subcategories'),
     path('export/transactions/pdf/', views.export_transactions_pdf, name='export_transactions_pdf'),
+    path('seed/', views.seed_categories, name='seed_categories'),
 
     # Redirect the root URL to the login page
     path('', RedirectView.as_view(url='/login/', permanent=True)),

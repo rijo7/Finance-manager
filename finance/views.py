@@ -168,3 +168,40 @@ def export_transactions_pdf(request):
 
     return response
 
+def seed_categories(request):
+    if not request.user.is_staff:
+        return HttpResponse("Forbidden", status=403)
+
+    # Clear existing data
+    Subcategory.objects.all().delete()
+    Category.objects.all().delete()
+
+    # Create categories
+    income = Category.objects.create(name='income')
+    expense = Category.objects.create(name='expense')
+
+    # Income subcategories
+    income_subs = [
+        'Other Income',
+        'Gifts',
+        'Investment Income',
+        'Business Income',
+        'Salary',
+    ]
+    for name in income_subs:
+        Subcategory.objects.create(category=income, name=name)
+
+    # Expense subcategories
+    expense_subs = [
+        'Other Expenses',
+        'Medical',
+        'Transportation',
+        'Rent/Mortgage',
+        'Entertainment',
+        'Utilities',
+        'Food',
+    ]
+    for name in expense_subs:
+        Subcategory.objects.create(category=expense, name=name)
+
+    return HttpResponse("Seeding complete ✅")
