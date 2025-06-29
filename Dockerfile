@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     libpangocairo-1.0-0 \
     libgdk-pixbuf2.0-0 \
     libffi-dev \
-    libgobject2.0-0 \
+    libglib2.0-0 \
     wkhtmltopdf \
     && rm -rf /var/lib/apt/lists/*
 
@@ -21,14 +21,14 @@ COPY . /app/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Collect static files (optional, comment if not needed)
+# Collect static files
 RUN python manage.py collectstatic --noinput
 
 # Run database migrations
 RUN python manage.py makemigrations
 RUN python manage.py migrate
 
-# Expose the port (Django default is 8000)
+# Expose the port
 EXPOSE 8000
 
 # Start server with Gunicorn
