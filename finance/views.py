@@ -14,8 +14,8 @@ from .forms import TransactionForm
 from django.db.models import Sum
 from django.contrib import messages
 from .forms import CustomUserCreationForm
-from django.views.decorators.csrf import csrf_exempt
-
+from django.template.loader import render_to_string
+from weasyprint import HTML
 
 def home(request):
     return render(request, 'finance/home.html')
@@ -161,8 +161,8 @@ def export_transactions_pdf(request):
     transactions = Transaction.objects.filter(user=request.user)
     html_string = render_to_string('finance/transactions_pdf.html', {'transactions': transactions})
 
-    # Convert HTML string to PDF
-    pdf_file = pdfkit.from_string(html_string, False)  # False means it will return a PDF file as bytes
+    # Convert HTML string to PDF with WeasyPrint
+    pdf_file = HTML(string=html_string).write_pdf()
 
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="transactions.pdf"'
