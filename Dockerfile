@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     libpangocairo-1.0-0 \
     libgdk-pixbuf2.0-0 \
     libffi-dev \
-    libgobject-2.0-0 \
+    libgobject2.0-0 \
     wkhtmltopdf \
     && rm -rf /var/lib/apt/lists/*
 
