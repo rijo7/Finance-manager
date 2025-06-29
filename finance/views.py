@@ -115,7 +115,7 @@ def add_transaction(request):
             transaction = form.save(commit=False)
             transaction.user = request.user
             transaction.save()
-            return redirect('transaction_list')
+            return redirect('dashboard')
     else:
         form = TransactionForm()
 
@@ -168,47 +168,3 @@ def export_transactions_pdf(request):
     response['Content-Disposition'] = 'attachment; filename="transactions.pdf"'
 
     return response
-
-@csrf_exempt
-def seed_categories(request):
-    if request.method != "GET":
-        return HttpResponse("Method Not Allowed", status=405)
-
-    # Optional: add a secret check
-    secret = request.GET.get('secret')
-    if secret != 'YOUR_SECRET_KEY':
-        return HttpResponse("Forbidden", status=403)
-
-    # Clear existing data
-    Subcategory.objects.all().delete()
-    Category.objects.all().delete()
-
-    # Create categories
-    income = Category.objects.create(name='income')
-    expense = Category.objects.create(name='expense')
-
-    # Income subcategories
-    income_subs = [
-        'Other Income',
-        'Gifts',
-        'Investment Income',
-        'Business Income',
-        'Salary',
-    ]
-    for name in income_subs:
-        Subcategory.objects.create(category=income, name=name)
-
-    # Expense subcategories
-    expense_subs = [
-        'Other Expenses',
-        'Medical',
-        'Transportation',
-        'Rent/Mortgage',
-        'Entertainment',
-        'Utilities',
-        'Food',
-    ]
-    for name in expense_subs:
-        Subcategory.objects.create(category=expense, name=name)
-
-    return HttpResponse("Seeding complete ✅")
